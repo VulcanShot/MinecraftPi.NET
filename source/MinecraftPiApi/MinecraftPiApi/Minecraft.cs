@@ -4,7 +4,7 @@ using System.Numerics;
 using MinecraftPiApi.Extensions;
 
 namespace MinecraftPiApi;
-public class Minecraft : MinecraftBase
+public class Minecraft : MinecraftBase, IDisposable
 {
     private const int DEFAULT_PORT = 4711;
     private static readonly IPAddress defaultAddress = IPAddress.Loopback;
@@ -123,5 +123,11 @@ public class Minecraft : MinecraftBase
     public void Setting(string setting, bool value)
     {
         connection.Send($"{prefix}.setting", setting, Convert.ToInt32(value).ToString());
+    }
+
+    public void Dispose()
+    {
+        connection.Dispose();
+        GC.SuppressFinalize(this);
     }
 }
