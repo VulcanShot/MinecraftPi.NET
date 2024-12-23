@@ -11,6 +11,6 @@ public class Player(Connection connection) : EntityHandler(connection, "player")
     /// <param name="value"></param>
     public void Setting(string setting, bool value)
     {
-        Connection.Send($"{prefix}.setting", setting, Convert.ToInt32(value).ToString());
+        connection.Send($"{prefix}.setting", setting, Convert.ToInt32(value).ToString());
     }
 }

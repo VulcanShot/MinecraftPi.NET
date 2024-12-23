@@ -7,7 +7,7 @@ public class EntityHandler : MinecraftBase
 {
     public EntityHandler(Connection connection, string prefix = "entity") : base(connection, prefix)
     {
-        Connection = connection ?? throw new ArgumentNullException(nameof(connection));
+        base.connection = connection ?? throw new ArgumentNullException(nameof(connection));
     }
 
     /// <summary>
@@ -18,7 +18,7 @@ public class EntityHandler : MinecraftBase
     /// <exception cref="FormatException"></exception>
     public Vector3 GetPosition(int entityId)
     {
-        string response = Connection.SendReceive($"{prefix}.getPos", entityId);
+        string response = connection.SendReceive($"{prefix}.getPos", entityId);
         return VectorUtils.FromString(response);
     }
 
@@ -29,7 +29,7 @@ public class EntityHandler : MinecraftBase
     /// <param name="position">The <see cref="Vector3"/> position to which the entity's position will be set to</param>
     public void SetPosition(int entityId, Vector3 position)
     {
-        Connection.Send($"{prefix}.SetPos", entityId, position.X, position.Y, position.Z);
+        connection.Send($"{prefix}.SetPos", entityId, position.X, position.Y, position.Z);
     }
 
     /// <summary>
@@ -39,7 +39,7 @@ public class EntityHandler : MinecraftBase
     /// <returns></returns>
     public Vector3 GetTilePosition(int entityId)
     {
-        string response = Connection.SendReceive($"{prefix}.getTile", entityId);
+        string response = connection.SendReceive($"{prefix}.getTile", entityId);
         return VectorUtils.FromString(response);
     }
 
@@ -51,6 +51,6 @@ public class EntityHandler : MinecraftBase
     public void SetTilePosition(int entityId, Vector3 position)
     {
         Vector3 flooredPosition = position.Floor();
-        Connection.Send($"{prefix}.SetTile", entityId, flooredPosition.X, flooredPosition.Y, flooredPosition.Z);
+        connection.Send($"{prefix}.SetTile", entityId, flooredPosition.X, flooredPosition.Y, flooredPosition.Z);
     }
 }
