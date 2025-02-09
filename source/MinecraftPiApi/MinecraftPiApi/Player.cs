@@ -5,10 +5,16 @@ public class Player(Connection connection) : EntityHandler(connection, "player")
     /// Set the <paramref name="value"/> of the host's player <paramref name="setting"/>.
     /// </summary>
     /// <param name="setting">
-    /// List of known keys:
-    /// <list type="bullet">autojump</list>
+    /// <list type="bullet">
+    /// <listheader>
+    /// <term>List of known keys:</term>
+    /// </listheader>
+    /// <item>
+    /// <term>autojump</term>
+    /// </item>
+    /// </list>
     /// </param>
-    /// <param name="value"></param>
+    /// <param name="value">The value associated to <paramref name="setting"/></param>
     public void Setting(string setting, bool value)
     {
         connection.Send($"{prefix}.setting", setting, Convert.ToInt32(value).ToString());
