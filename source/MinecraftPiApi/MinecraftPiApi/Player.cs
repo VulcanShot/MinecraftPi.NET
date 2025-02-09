@@ -17,6 +17,6 @@ public class Player(Connection connection) : EntityHandler(connection, "player")
     /// <param name="value">The value associated to <paramref name="setting"/></param>
     public void Setting(string setting, bool value)
     {
-        connection.Send($"{prefix}.setting", setting, Convert.ToInt32(value).ToString());
+        Connection.Send($"{Prefix}.setting", setting, Convert.ToInt32(value).ToString());
     }
 }

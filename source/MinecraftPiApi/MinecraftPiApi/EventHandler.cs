@@ -7,7 +7,7 @@ public class EventHandler(Connection connection) : MinecraftBase(connection, "ev
 {
     public IEnumerable<BlockEvent> GetBlockHits()
     {
-        string response = connection.SendReceive($"{prefix}.blocks.hits");
+        string response = Connection.SendReceive($"{Prefix}.blocks.hits");
         string[] events = response.Split(OBJECT_SEPARATOR);
         return events.Select(e =>
         {
@@ -19,6 +19,6 @@ public class EventHandler(Connection connection) : MinecraftBase(connection, "ev
 
     public void ClearAll()
     {
-        connection.Send($"{prefix}.clear");
+        Connection.Send($"{Prefix}.clear");
     }
 }

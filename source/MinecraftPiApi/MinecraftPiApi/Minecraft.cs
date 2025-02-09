@@ -15,10 +15,10 @@ public class Minecraft : MinecraftBase, IDisposable
 
     private Minecraft(IPAddress address, int port) : base(new Connection(address, port), "world")
     {
-        CameraHandler = new(connection);
-        Player = new(connection);
-        EntityHandler = new(connection);
-        EventHandler = new(connection);
+        CameraHandler = new(Connection);
+        Player = new(Connection);
+        EntityHandler = new(Connection);
+        EventHandler = new(Connection);
     }
 
     /// <summary>
@@ -36,21 +36,21 @@ public class Minecraft : MinecraftBase, IDisposable
     public static Minecraft Create(IPAddress address, int port = DEFAULT_PORT)
     {
         Minecraft minecraft = new(address, port);
-        minecraft.connection.Connect();
+        minecraft.Connection.Connect();
         return minecraft;
     }
 
     public BlockId GetBlockId(Vector3 position)
     {
         position = position.Floor();
-        string response = connection.SendReceive($"{prefix}.getBlock", position.X, position.Y, position.Z);
+        string response = Connection.SendReceive($"{Prefix}.getBlock", position.X, position.Y, position.Z);
         return (BlockId)int.Parse(response);
     }
 
     public Block GetBlock(Vector3 position)
     {
         position = position.Floor();
-        string response = connection.SendReceive($"{prefix}.getBlockWithData", position.X, position.Y, position.Z);
+        string response = Connection.SendReceive($"{Prefix}.getBlockWithData", position.X, position.Y, position.Z);
         int[] blockInfo = Array.ConvertAll(response.Split(DATA_SEPARATOR), int.Parse);
         return new Block(blockInfo[0], blockInfo[1]);
     }
@@ -58,39 +58,39 @@ public class Minecraft : MinecraftBase, IDisposable
     public void SetBlock(Vector3 position, BlockId id)
     {
         position = position.Floor();
-        connection.Send($"{prefix}.setBlock", position.X, position.Y, position.Z, (int)id);
+        Connection.Send($"{Prefix}.setBlock", position.X, position.Y, position.Z, (int)id);
     }
 
     public void SetBlock(Vector3 position, BlockId id, int data)
     {
         position = position.Floor();
-        connection.Send($"{prefix}.setBlock", position.X, position.Y, position.Z, (int)id, data);
+        Connection.Send($"{Prefix}.setBlock", position.X, position.Y, position.Z, (int)id, data);
     }
 
     public void SetBlocks(Vector3 minBounds, Vector3 maxBounds, BlockId id)
     {
         minBounds = minBounds.Floor();
         maxBounds = maxBounds.Floor();
-        connection.Send($"{prefix}.setBlock", minBounds.X, minBounds.Y, minBounds.Z, maxBounds.X, maxBounds.Y, maxBounds.Z, (int)id);
+        Connection.Send($"{Prefix}.setBlock", minBounds.X, minBounds.Y, minBounds.Z, maxBounds.X, maxBounds.Y, maxBounds.Z, (int)id);
     }
 
     public void SetBlocks(Vector3 minBounds, Vector3 maxBounds, BlockId id, int data)
     {
         minBounds = minBounds.Floor();
         maxBounds = maxBounds.Floor();
-        connection.Send($"{prefix}.setBlock", minBounds.X, minBounds.Y, minBounds.Z, maxBounds.X, maxBounds.Y, maxBounds.Z, (int)id, data);
+        Connection.Send($"{Prefix}.setBlock", minBounds.X, minBounds.Y, minBounds.Z, maxBounds.X, maxBounds.Y, maxBounds.Z, (int)id, data);
     }
 
     public int GetHeight(Vector2 groundPlane)
     {
         groundPlane = groundPlane.Floor();
-        string response = connection.SendReceive($"{prefix}.getHeight", groundPlane.X, groundPlane.Y);
+        string response = Connection.SendReceive($"{Prefix}.getHeight", groundPlane.X, groundPlane.Y);
         return int.Parse(response);
     }
 
     public int[] GetPlayerEntityIds()
     {
-        string response = connection.SendReceive($"{prefix}.getPlayerIds");
+        string response = Connection.SendReceive($"{Prefix}.getPlayerIds");
         return Array.ConvertAll(response.Split(OBJECT_SEPARATOR), int.Parse);
     }
 
@@ -99,7 +99,7 @@ public class Minecraft : MinecraftBase, IDisposable
     /// </summary>
     public void SaveCheckpoint()
     {
-        connection.Send($"{prefix}.checkpoint.save");
+        Connection.Send($"{Prefix}.checkpoint.save");
     }
 
     /// <summary>
@@ -107,12 +107,12 @@ public class Minecraft : MinecraftBase, IDisposable
     /// </summary>
     public void UseCheckpoint()
     {
-        connection.Send($"{prefix}.checkpoint.restore");
+        Connection.Send($"{Prefix}.checkpoint.restore");
     }
 
     public void PostToChat(string message)
     {
-        connection.Send($"chat.post", message);
+        Connection.Send($"chat.post", message);
     }
 
     /// <summary>
@@ -122,12 +122,12 @@ public class Minecraft : MinecraftBase, IDisposable
     /// <param name="value"></param>
     public void Setting(string setting, bool value)
     {
-        connection.Send($"{prefix}.setting", setting, Convert.ToInt32(value).ToString());
+        Connection.Send($"{Prefix}.setting", setting, Convert.ToInt32(value).ToString());
     }
 
     public void Dispose()
     {
-        connection.Dispose();
+        Connection.Dispose();
         GC.SuppressFinalize(this);
     }
 }
